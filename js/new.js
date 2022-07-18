@@ -44,7 +44,7 @@ bntPost.addEventListener ('click', async (e) => {
         method: 'POST',
         body: JSON.stringify(newPost),
         headers: {
-            "Content-type": "application/json; "
+            "Content-Type": "application/json"
             
         } 
 
