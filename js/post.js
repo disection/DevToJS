@@ -1,39 +1,25 @@
+let idPost = window.location.search.substring(4)
 
-let idPost = window.location.search.substring(3)
-console.log(idPost)
+const API_URL = `http://localhost:8080/posts/${idPost}`
 
-fetch(`https://devto-9a074-default-rtdb.firebaseio.com/post/${idPost}.json`)
+fetch(API_URL, {
+  method: 'GET',
+  headers: {
+      "Content-Type": "application/json"       
+  } 
+})
 .then((response) => {
-
+  
     if(!response.ok){
         throw new Error (`Algo salió mal ${response.status}`)
     }else{
         return response.json()
     }
 })
-.then((response) => {
-
-    console.log(response)
-
-    
-    let {author, avatarAuthor, content, createdDate, minToRead, tags, title, urlCoverImage} = response
-
-    let arrTags = tags.split('#')
-    console.log(arrTags)
-
-    function cleanArray(actual) {
-       let newArray = new Array();
-       for (let i = 0; i < actual.length; i++) {
-          if (actual[i]) {
-             newArray.push(actual[i])
-          }
-       }
-       return newArray
-    }
-     
-    let cleanTagArr= cleanArray(arrTags)
-    console.log(cleanTagArr)
-    
+.then((dataPost) => {
+    console.log(dataPost)    
+    let {author, avatarAuthor, content, createDate, minToRead, tags, tittle, urlCoverImage} = dataPost.data.post
+    console.log("tagas:",tags)    
     let template = 
     `
     <!-- Card container user detailed user post start -->
@@ -61,19 +47,16 @@ fetch(`https://devto-9a074-default-rtdb.firebaseio.com/post/${idPost}.json`)
                     <h6 class="card__profile-name m-0"> ${author}
 <!-- Post author -->
                     </h6>
-                    <p class="card__date m-0"> ${createdDate}
+                    <p class="card__date m-0"> ${createDate}
 <!-- Card date -->
                     </p>
                   </div>
                 </div>
 
-              <h3 class="card__tittle card__post-tittle"> ${title}
+              <h3 class="card__tittle card__post-tittle"> ${tittle}
 <!-- cart title content -->
               </h3>
-              <button class="card__tags m-2">${cleanTagArr[0] === undefined ? '' : '#' + cleanTagArr[0]}</button
-              ><button class="card__tags m-2">${cleanTagArr[1] === undefined ? '' : '#' + cleanTagArr[1]}</button
-              ><button class="card__tags m-2">${cleanTagArr[2] === undefined ? '' : '#' + cleanTagArr[2]}</button
-              ><button class="card__tags m-2">${cleanTagArr[3] === undefined ? '' : '#' + cleanTagArr[3]}</button>
+              <button class="card__tags m-2">${tags}</button>
               <p class="card__post-body">${content}
 <!-- Card body content -->
               </p>
